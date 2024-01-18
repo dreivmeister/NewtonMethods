@@ -37,5 +37,10 @@ using BenchmarkTools
 
 @benchmark ForwardDiff.derivative(f, rand()) setup=(f=x->sin(x)) seconds=3
 
-f_prime = f′(f)
-@benchmark f_prime(rand()) setup=(f=x->sin(x)) seconds=3
+function f_p(f, x)
+    return ForwardDiff.derivative(f, x)
+end
+
+@benchmark f_p(f, rand()) setup=(f=x->sin(x)) seconds=3
+
+# ⟹ call ForwardDiff directly, not using some wrapper function
