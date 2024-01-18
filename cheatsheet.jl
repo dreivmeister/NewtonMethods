@@ -24,10 +24,18 @@ f([pi/4, 2, 3, 4])
 Hf(f)([pi/4, 2, 3, 4])
 
 # ℜ^{n} → ℜ^{m}
-f(x::Vector) = [sin(x[1]), cos(x[2]), tan(x[3])]
+f(x::Vector) = [sin(x[1]*x[3]), cos(x[2]*x[4])]
 Jf(f::Function) = x -> ForwardDiff.jacobian(f, x)
 vector_Hf(f::Function) = x -> ForwardDiff.jacobian(y -> ForwardDiff.jacobian(f, y), x)
 
-f([pi/4, 2, 3, 4])
-Jf(f)([pi/4, 2, 3, 4])
-vector_Hf(f)([pi/4, 2, 3, 4])
+f([pi/4, 2, 2, 2])
+Jf(f)([pi/4, 2, 2, 2]) # ForwardDiff.jacobian(f, [pi/4, 2, 3, 4])
+vector_Hf(f)([pi/4, 2, 2, 2])
+
+
+using BenchmarkTools
+
+@benchmark ForwardDiff.derivative(f, rand()) setup=(f=x->sin(x)) seconds=3
+
+f_prime = f′(f)
+@benchmark f_prime(rand()) setup=(f=x->sin(x)) seconds=3
